@@ -1,0 +1,30 @@
+#!/usr/bin/with-contenv bash
+#shellcheck shell=bash
+
+# If config file doesn't exist, create it
+if ! [[ -f /config/.config/Jontisoft/JAERO.conf ]]; then
+
+    mkdir -p /config/.config/Jontisoft/
+
+    cat << END > /config/.config/Jontisoft/JAERO.conf
+[General]
+checkBoxbeepontextmessage=true
+checkBoxdropnontextmsgs=true
+checkBoxlogenable=true
+checkBoxlogwidebandwidthenable=false
+checkOutputADSMessageToTCP=false
+checkOutputDecodedMessageToUDPPort=false
+checkTCPAsClient=false
+comboBoxDisplayformat=2
+comboBoxsoundcard=AudioConnector.monitor
+lineEditDBURL2=https://junzis.com/adb/download
+lineEditdonotdisplaysus=26 0A C0 00 14 16
+lineEditlogdir=/dev/stdout
+lineEditplanelookup=http://www.flightradar24.com/data/airplanes/{REG}
+lineEditplanesfolder=/config/.local/share/JAERO/planes
+lineEdittcpoutputadsmessagesaddress=0.0.0.0:30003
+lineEditudpoutputdecodedmessagesaddress=localhost:18765
+updatedbinformed3=true
+END
+
+fi
