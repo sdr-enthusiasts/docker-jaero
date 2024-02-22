@@ -1,0 +1,51 @@
+#!/bin/bash
+
+# Create Jaero Config directory
+if ! [[ -d /config/xdg/config/Jontisoft ]]; then
+	mkdir -p /config/xdg/config/Jontisoft/
+fi
+
+for i in $(seq -f "%02g" 1 $VFO_NO); do
+
+cat << END > /config/xdg/config/Jontisoft/"JAERO [VFO$i].conf"
+[General]
+MQTT_enable=false
+PLANE_LOG_DB_SCHEMA_VERSION=2
+actionCpuReduce=true
+checkBoxDisablePlaneLogWindow=${DISABLE_PLANE_LOGGING}
+checkBoxbeepontextmessage=false
+checkBoxdropnontextmsgs=true
+checkBoxlogenable=false
+checkBoxlogwidebandwidthenable=false
+checkBoxonlyuselibacars=false
+checkOutputADSMessageToTCP=${ENABLE_BASESTATION}
+checkOutputDecodedMessageToUDPPort=${FEED_AIRFRAMES}
+checkSetStationId=true
+checkTCPAsClient=${BEHAVE_AS_BASESTATION_CLIENT}
+comboBoxDisplayformat=2
+comboBoxdisplay=2
+comboBoxsoundcard=AudioConnector.monitor
+lineEditdonotdisplaysus=26 0A C0 00 14 16
+lineEditlogdir=/dev/stdout
+lineEditplanelookup=http://www.flightradar24.com/data/airplanes/{REG}
+lineEditplanesfolder=/config/xdg/data/JAERO/planes
+lineEditstationid=${FEEDER_ID}
+lineEdittcpoutputadsmessagesaddress=${BASESTATION_ADDRESS}
+localAudioOutEnabled=false
+mqtt_settings_object=@ByteArray(\0\0\0<\0M\0q\0t\0t\0S\0u\0\x62\0s\0\x63\0r\0i\0\x62\0\x65\0r\0_\0S\0\x65\0t\0t\0i\0n\0g\0s\0_\0O\0\x62\0j\0\x65\0\x63\0t\0\0\0\n\0\0\0\0\x16\0\x65\0x\0\x61\0m\0p\0l\0\x65\0.\0\x63\0o\0m\0\0\0$\0\"\xb3\0\0\0\n\0\0\0\0\x16\0\x61\0\x63\0\x61\0r\0s\0/\0j\0\x61\0\x65\0r\0o\0\0\0\x1\0\x1\0\0\0\n\0\0\0\0.\0\x63\0h\0\x61\0n\0g\0\x65\0m\0\x65\0_\0i\0\x64\0_\0m\0\x61\0k\0\x65\0_\0r\0\x61\0n\0\x64\0o\0m\0\0\0\n\0\0\0\0$\0\x63\0h\0\x61\0n\0g\0\x65\0m\0\x65\0_\0u\0n\0s\0\x65\0r\0n\0\x61\0m\0\x65\0\0\0\f\0\0\0\0\x11\x63hangeme_password\0\0\0\x1\0\x1\0\0\0\x1\0\0)
+remoteAudioOutBindAddress=tcp://*:5551
+remoteAudioOutBindTopic=JAERO
+remoteAudioOutEnabled=false
+zmqAudioInputEnabled=true
+zmqAudioInputReceiveAddress=tcp://${SDRRECEIVER_ADDRESS}
+zmqAudioInputReceiveTopic=${VFO_NAME}$i
+
+[feeders]
+1\format=4
+1\host=feed.airframes.io
+1\port=5571
+size=1
+END
+
+done
+

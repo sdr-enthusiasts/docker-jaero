@@ -1,0 +1,20 @@
+#!/bin/bash
+
+STARTAPP=/startapp.sh
+
+cat << EOF > ${STARTAPP}
+HOME=/config
+export HOME
+EOF
+
+for i in $(seq -f "%02g" 1 $VFO_NO); do
+	jaerostart=("/opt/jaero/JAERO -s VFO$i")
+cat << EOF >> ${STARTAPP}
+${jaerostart[@]} > /dev/null 2>&1 &
+EOF
+done
+
+sed -i '$ s/.$//' ${STARTAPP}
+
+chmod +x ${STARTAPP}
+

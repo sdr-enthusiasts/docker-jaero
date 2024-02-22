@@ -1,45 +1,41 @@
-FROM debian:buster-slim
-
-ENV DISPLAY=:0 \
-    DISPLAY_WIDTH=1280 \
-    DISPLAY_HEIGHT=768
+FROM jlesage/baseimage-gui:debian-11-v4.5.3
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
-
-# Note, the specific commit of rtlsdr is to address issue #15
-# See: https://github.com/mikenye/docker-piaware/issues/15
-# This should be revisited in future when rtlsdr 0.6.1 or newer is released
 
 RUN set -x && \
     TEMP_PACKAGES=() && \
     KEPT_PACKAGES=() && \
 
     # General tools to get and build packages
-    TEMP_PACKAGES+=(autoconf) && \
-    TEMP_PACKAGES+=(automake) && \
     TEMP_PACKAGES+=(build-essential) && \
+    TEMP_PACKAGES+=(automake) && \
+    TEMP_PACKAGES+=(autoconf) && \
     KEPT_PACKAGES+=(ca-certificates) && \
     TEMP_PACKAGES+=(cmake) && \
-    TEMP_PACKAGES+=(dos2unix) && \
     TEMP_PACKAGES+=(git) && \
     TEMP_PACKAGES+=(libtool) && \
-
-    # Dependencies to deploy s6-overlay
     TEMP_PACKAGES+=(file) && \
-    TEMP_PACKAGES+=(gnupg) && \
 
     # Dependencies for libacars
     TEMP_PACKAGES+=(libxml2-dev) && \
     KEPT_PACKAGES+=(libxml2) && \
+    TEMP_PACKAGES+=(zlib1g-dev) && \
+    KEPT_PACKAGES+=(zlib1g) && \
+    TEMP_PACKAGES+=(libjansson-dev) && \
+    KEEP_PACKAGES+=(libjansson4) && \
 
     # Dependencies for JAERO
     KEPT_PACKAGES+=(curl) && \
     TEMP_PACKAGES+=(qtmultimedia5-dev) && \
     KEPT_PACKAGES+=(libqt5multimedia5-plugins) && \
     KEPT_PACKAGES+=(libqt5svg5) && \
+    KEPT_PACKAGES+=(libqt5sql5) && \
+    KEPT_PACKAGES+=(libqt5sql5-sqlite) && \
     TEMP_PACKAGES+=(libqt5svg5-dev) && \
-    KEPT_PACKAGES+=(qt5-default) && \
+    TEMP_PACKAGES+=(qtbase5-dev) && \
+    KEPT_PACKAGES+=(qtchooser) && \
     TEMP_PACKAGES+=(qt5-qmake) && \
+    TEMP_PACKAGES+=(qtbase5-dev-tools) && \
     TEMP_PACKAGES+=(libcpputest-dev) && \
     KEPT_PACKAGES+=(cpputest) && \
     TEMP_PACKAGES+=(libzmq3-dev) && \
@@ -49,24 +45,10 @@ RUN set -x && \
     TEMP_PACKAGES+=(libqcustomplot-dev) && \
     KEPT_PACKAGES+=(libqcustomplot2.0) && \
     TEMP_PACKAGES+=(wget) && \
-    TEMP_PACKAGES+=(unzip) && \
-
-    # XWindows
-    KEPT_PACKAGES+=(x11vnc) && \
-    KEPT_PACKAGES+=(xvfb) && \
-    KEPT_PACKAGES+=(openbox) && \
-
-    # Stuff for audio redirection
-    KEPT_PACKAGES+=(pulseaudio) && \
+    KEPT_PACKAGES+=(unzip) && \
 
     # Logging
     KEPT_PACKAGES+=(gawk) && \
-
-    # Python
-    KEPT_PACKAGES+=(python3) && \
-    KEPT_PACKAGES+=(python3-pip) && \
-    KEPT_PACKAGES+=(python3-setuptools) && \
-    KEPT_PACKAGES+=(python3-wheel) && \
 
     # Install packages.
     apt-get update && \
@@ -74,75 +56,78 @@ RUN set -x && \
         ${KEPT_PACKAGES[@]} \
         ${TEMP_PACKAGES[@]} \
         && \
+
+    # mark libjanson4 as apt autoremoves it on clean and breaks libacars
+    apt-mark manual libjansson4 && \
+
     git config --global advice.detachedHead false && \
 
-    # libacars: clone, build & install
+    # libacars
     git clone --depth 1 --single-branch "https://github.com/szpajder/libacars" "/src/libacars" && \
     mkdir -p /src/libacars/build && \
     pushd /src/libacars/build && \
     cmake ../ && \
     make -j "$(nproc)" && \
-    make install -j "$(nproc)" && \
+    make install && \
     popd && \
     ldconfig && \
 
-    # libcorrect: clone, build & install
-    git clone https://github.com/quiet/libcorrect /src/libcorrect && \
+    # qmqtt
+    git clone --depth 1 --single-branch "https://github.com/emqx/qmqtt.git" "/src/qmqtt" && \
+    pushd /src/qmqtt && \
+    qmake && \
+    make -j "$(nproc)" && \
+    make install && \
+    popd && \
+    ldconfig && \
+
+    # libcorrect
+    git clone --depth 1 --single-branch "https://github.com/quiet/libcorrect" "/src/libcorrect" && \
     mkdir -p /src/libcorrect/build && \
     pushd /src/libcorrect/build && \
     cmake ../ && \
     make -j "$(nproc)" && \
-    make install -j "$(nproc)" && \
+    make install && \
     popd && \
     ldconfig && \
 
-    # JFFT: clone
-    git clone https://github.com/jontio/JFFT /src/JFFT && \
+    # JFFT
+    git clone --depth 1 --single-branch "https://github.com/jontio/JFFT" "/src/JFFT" && \
 
     # libaeroambe: 
-    git clone https://github.com/jontio/libaeroambe /src/libaeroambe && \
+    git clone --depth 1 --single-branch "https://github.com/jontio/libaeroambe" "/src/libaeroambe" && \
     mkdir -p /src/libaeroambe/mbelib-master/build && \
     pushd /src/libaeroambe/mbelib-master/build && \
     cmake -DCMAKE_POSITION_INDEPENDENT_CODE=ON ../ && \
     make -j "$(nproc)" && \
-    make -j "$(nproc)" install && \
-
-
-    # Clone JAERO
-    git clone https://github.com/jontio/JAERO.git /src/JAERO && \
-    # Make & install
-    pushd /src/JAERO && \
-    ./ci-create-basestation.sh && \
-    pushd /src/JAERO/JAERO && \
-    qmake CONFIG+="CI" && \
-    make -j "$(nproc)" && \
     make install && \
-    popd && popd && \
+    popd && \
+    ldconfig && \
+    pushd /src/libaeroambe/libaeroambe && \
+    qmake && \
+    make && \
+    make install && \
+    popd && \
     ldconfig && \
 
-    # Deploy s6-overlay
-    curl -s https://raw.githubusercontent.com/mikenye/deploy-s6-overlay/master/deploy-s6-overlay.sh | sh && \
+    # JAERO
+    git clone --depth 1 --single-branch "https://github.com/jontio/JAERO.git" "/src/JAERO" && \
+    # Make & install
+    pushd /src/JAERO/JAERO && \
+    qmake && \
+    make -j "$(nproc)" && \
+    make install && \
+    popd && \
+    ldconfig && \
 
-    # Create directory structure
-    mkdir -p /config && \
-    mkdir -p /run/pulse && \
-    mkdir -p /config/.config/pulse && \
-    chown pulse:pulse -R /run/pulse && \
-    chown pulse:pulse -R /config/.config/pulse && \
-    find /config -type d -exec chmod a+rx {} \; && \
-    find /run/pulse -type d -exec chmod a+rx {} \; && \
+    #clean up
+    apt-get remove -y "${TEMP_PACKAGES[@]}" && \
+    apt-get autoremove -y && \
+    rm -rf /src/* /tmp/* /var/lib/apt/lists/* && \
+    find /var/log -type f -exec truncate --size=0 {} \; && \
 
-    # Python
-    update-alternatives --install /usr/bin/python python /usr/bin/python3 1 && \
-    
-    # Allow everything access to PulseAudio
-    sed -i 's/load-module module-native-protocol-unix/load-module module-native-protocol-unix auth-anonymous=1/g' /etc/pulse/system.pa && \
-    echo 'load-module module-null-sink sink_name=AudioConnector' >> /etc/pulse/system.pa && \
-    echo 'set-default-sink AudioConnector' >> /etc/pulse/system.pa && \
-    echo 'set-default-source AudioConnector.monitor' >> /etc/pulse/system.pa
+    set-cont-env APP_NAME "JAERO"
 
-EXPOSE 5900/tcp
-
-ENTRYPOINT [ "/init" ]
+EXPOSE 5800 5900 30003
 
 COPY rootfs/ /
