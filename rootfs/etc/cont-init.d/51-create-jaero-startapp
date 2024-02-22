@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -xe
+
 STARTAPP=/startapp.sh
 
 cat << EOF > ${STARTAPP}

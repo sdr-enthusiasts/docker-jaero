@@ -1,12 +1,17 @@
 #!/bin/bash
 
+set -xe
+
 # Create Jaero Config directory
 if ! [[ -d /config/xdg/config/Jontisoft ]]; then
-	mkdir -p /config/xdg/config/Jontisoft/
+    mkdir -p /config/xdg/config/Jontisoft/
 fi
 
-for i in $(seq -f "%02g" 1 $VFO_NO); do
-
+if [ ${VFO_NO} -gt 20 ]; then
+    echo "Please enter a VFO number less than 21"
+    exit 1
+else
+    for i in $(seq -f "%02g" 1 $VFO_NO); do
 cat << END > /config/xdg/config/Jontisoft/"JAERO [VFO$i].conf"
 [General]
 MQTT_enable=false
@@ -48,4 +53,4 @@ size=1
 END
 
 done
-
+fi
