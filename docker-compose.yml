@@ -1,0 +1,32 @@
+version: "3"
+
+services:
+  jaero:
+    image: ghcr.io/sdr-enthusiasts/docker-jaero:latest
+    tty: true
+    container_name: jaero
+    hostname: jaero
+    restart: always
+    ports:
+    - 5800:5800
+    - 30003:30003
+    environment:
+      - TZ=Australia/Melbourne
+      - DISPLAY_WIDTH=1280
+      - DISPLAY_HEIGHT=720
+      - VNC_PASSWORD=
+      - FEEDER_ID=YOUR-FEEDER-ID
+      - DISABLE_PLANE_LOGGING=true
+      - ENABLE_BASESTATION=false
+      - BASESTATION_ADDRESS=0.0.0.0:30003
+      - BEHAVE_AS_BASESTATION_CLIENT=false
+      - SDRRECEIVER_ADDRESS=sdrx.ip.address:6003
+      - VFO_NAME=VFO
+      - VFO_NO=5
+      - FEED_AIRFRAMES=true
+#    volumes:
+#      - "BaseStation.sqb:/opt/jaero/basestation.sqb"
+    tmpfs:
+      - /run:exec,size=64M
+      - /var/log,size=32M
+      - /tmp:exec
