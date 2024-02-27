@@ -4,7 +4,7 @@ Docker container for [JAERO](https://github.com/jontio/JAERO).
 
 ---
 
-This container is based on the excellent [jlesage/baseimage-gui](https://hub.docker.com/r/jlesage/baseimage-gui). All the hard work has been done by them, for advanced usage I suggest you check out the [README](https://github.com/jlesage/docker-baseimage-gui/blob/master/README.md) from [jlesage/baseimage-gui](https://hub.docker.com/r/jlesage/baseimage-gui).
+This container is based on the excellent [jlesage/docker-baseimage-gui](https://github.com/jlesage/docker-baseimage-gui). All the hard work has been done by them, for advanced usage I suggest you check out the [README](https://github.com/jlesage/docker-baseimage-gui/blob/master/README.md) from [jlesage/docker-baseimage-gui](https://github.com/jlesage/docker-baseimage-gui).
 
 ---
 
