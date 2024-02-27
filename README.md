@@ -16,7 +16,7 @@ This container is based on the excellent [jlesage/baseimage-gui](https://hub.doc
 | `5900` | Optional        | Port used to access the application's GUI via the VNC protocol.  Optional if no VNC client is used. |
 | `30003`| Optional        | Port used to serve Basestation data. |
 
-###  Environment Variables
+### Environment Variables
 
 | Environment Variable | Description |  Default |
 |----------------------|-------------|--------------|
@@ -29,9 +29,9 @@ This container is based on the excellent [jlesage/baseimage-gui](https://hub.doc
 | Jaero Variables               | Description                                                | Controls Jaero option                    | Default         |
 |-------------------------------|------------------------------------------------------------|------------------------------------------|-----------------|
 |`SET_STATION_ID`               | Jaero Station Id (airframes feeder ID)                     | Set Station ID                           | Unset           |
-|`DISABLE_PLANE_LOGGING`        | Disable llane logging                                      | Disable Plane log window                 | `true`          |
+|`DISABLE_PLANE_LOGGING`        | Disable plane logging                                      | Disable plane log window                 | `true`          |
 |`ENABLE_BASESTATION_FORMAT`    | Enable jaero Basestation output                            | Enable BaseStation format                | `false`         |
-|`BASESTATION_ADDRESS`          | Ip address and port on which to serve basestation data     | Enable BaseStation format ip:port window | `0.0.0.0:30003` |
+|`BASESTATION_ADDRESS`          | IP address and port on which to serve basestation data     | Enable BaseStation format ip:port window | `0.0.0.0:30003` |
 |`BEHAVE_AS_BASESTATION_CLIENT` | Set to true to enable client behaviour                     | Behave as client                         | `false`         |
 |`SDRX_ADDRESS`                 | SDRReceiver ip adrress and port to receive zmq data        | Address                                  | Unset           |
 |`SDRX_TOPIC_NAME`              | SDRReceiver Topic name                                     | First half of topic setting              | `VFO`           |
