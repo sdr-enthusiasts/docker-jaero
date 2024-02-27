@@ -6,23 +6,23 @@ services:
     tty: true
     container_name: jaero
     hostname: jaero
-    restart: always
+    restart: unless-stopped
     ports:
     - 5800:5800
     - 30003:30003
     environment:
       - TZ=Australia/Melbourne
-      - DISPLAY_WIDTH=1280
-      - DISPLAY_HEIGHT=720
+      - DISPLAY_WIDTH=1920
+      - DISPLAY_HEIGHT=1080
       - VNC_PASSWORD=
-      - FEEDER_ID=YOUR-FEEDER-ID
+      - SET_STATION_ID=FEEDER-ID
       - DISABLE_PLANE_LOGGING=true
-      - ENABLE_BASESTATION=false
+      - ENABLE_BASESTATION_FORMAT=false
       - BASESTATION_ADDRESS=0.0.0.0:30003
       - BEHAVE_AS_BASESTATION_CLIENT=false
-      - SDRRECEIVER_ADDRESS=sdrx.ip.address:6003
-      - VFO_NAME=VFO
-      - VFO_NO=5
+      - SDRX_ADDRESS=sdrx.ip.address:6003
+      - SDRX_TOPIC_NAME=VFO
+      - NUMBER_OF_SDRX_TOPICS=3
       - FEED_AIRFRAMES=true
 #    volumes:
 #      - "BaseStation.sqb:/opt/jaero/basestation.sqb"

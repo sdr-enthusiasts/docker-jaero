@@ -9,8 +9,8 @@ HOME=/config
 export HOME
 EOF
 
-for i in $(seq -f "%02g" 1 $VFO_NO); do
-	jaerostart=("/opt/jaero/JAERO -s VFO$i")
+for i in $(seq -f "%02g" 1 ${NUMBER_OF_SDRX_TOPICS}); do
+    jaerostart=("/opt/jaero/JAERO -s ${SDRX_TOPIC_NAME}$i")
 cat << EOF >> ${STARTAPP}
 ${jaerostart[@]} > /dev/null 2>&1 &
 EOF
