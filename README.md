@@ -1,6 +1,6 @@
 # sdr-enthusiasts/docker-JAERO
 
-Docker container for [JAERO](https://github.com/jontio/JAERO).
+Docker container for [JAERO](https://github.com/jontio/JAERO) to receive/decode inmarsat ACARS via zmq from [SDRReceiver](https://github.com/jeroenbeijer/SDRReceiver) and upload to [airframes.io](https://app.airframes.io)
 
 ---
 
@@ -8,7 +8,7 @@ This container is based on the excellent [jlesage/docker-baseimage-gui](https://
 
 ---
 
-### Ports `5800 5900 30003` are exposed by default in this container.
+### Ports `5800` `5900` `30003` are exposed by default in this container.
 
 | Port   | Mapping to host | Description |
 |--------|-----------------|-------------|
@@ -42,6 +42,8 @@ This container is based on the excellent [jlesage/docker-baseimage-gui](https://
 ## Up-and-Running with `docker-compose` 
 
 - An example [`docker-compose.yml`](docker-compose.yml) file can be found in this repository.
+
+Once you have [installed Docker](https://github.com/sdr-enthusiasts/docker-install), you can follow these lines of code to get up and running:
 
 ```bash
 mkdir -p docker-jaero
