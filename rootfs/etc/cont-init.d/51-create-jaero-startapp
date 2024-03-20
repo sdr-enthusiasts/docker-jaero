@@ -1,6 +1,7 @@
 #!/bin/bash
 
-set -xe
+set -e
+set -u
 
 STARTAPP=/startapp.sh
 
@@ -9,7 +10,7 @@ HOME=/config
 export HOME
 EOF
 
-for i in $(seq -f "%02g" 1 ${NUMBER_OF_SDRX_TOPICS}); do
+for i in $(seq -f "%02g" 1 "${NUMBER_OF_SDRX_TOPICS}"); do
     jaerostart=("/opt/jaero/JAERO -s ${SDRX_TOPIC_NAME}$i")
 cat << EOF >> ${STARTAPP}
 ${jaerostart[@]} > /dev/null 2>&1 &

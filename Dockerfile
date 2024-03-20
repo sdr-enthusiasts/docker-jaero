@@ -2,6 +2,7 @@ FROM jlesage/baseimage-gui:debian-11-v4.5.3
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
+# hadolint ignore=DL3008
 RUN set -x && \
     TEMP_PACKAGES=() && \
     KEPT_PACKAGES=() && \
@@ -53,8 +54,8 @@ RUN set -x && \
     # Install packages.
     apt-get update && \
     apt-get install -y --no-install-recommends \
-        ${KEPT_PACKAGES[@]} \
-        ${TEMP_PACKAGES[@]} \
+        "${KEPT_PACKAGES[@]}" \
+        "${TEMP_PACKAGES[@]}" \
         && \
 
     # mark libjanson4 as apt autoremoves it on clean and breaks libacars
