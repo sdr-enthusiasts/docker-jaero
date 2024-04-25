@@ -1,5 +1,3 @@
-version: "3"
-
 services:
   jaero:
     image: ghcr.io/sdr-enthusiasts/docker-jaero:latest
@@ -12,9 +10,6 @@ services:
     - 30003:30003
     environment:
       - TZ=Australia/Melbourne
-      - DISPLAY_WIDTH=1920
-      - DISPLAY_HEIGHT=1080
-      - VNC_PASSWORD=
       - SET_STATION_ID=FEEDER-ID
       - DISABLE_PLANE_LOGGING=true
       - ENABLE_BASESTATION_FORMAT=false
@@ -23,7 +18,8 @@ services:
       - SDRX_ADDRESS=sdrx.ip.address:6003
       - SDRX_TOPIC_NAME=VFO
       - NUMBER_OF_SDRX_TOPICS=3
-      - FEED_AIRFRAMES=true
+      - ENABLE_FEEDING=true
+      - FEEDERS=1\format=4 1\host=feed.airframes.io 1\port=5571 # 2\format=4 2\host=acarshub 2\port=5557
 #    volumes:
 #      - "BaseStation.sqb:/opt/jaero/basestation.sqb"
     tmpfs:

@@ -1,5 +1,17 @@
 FROM jlesage/baseimage-gui:debian-11-v4.5.3
 
+ENV TZ="Australia/Melbourne" \
+    SET_STATION_ID="FEEDER-ID" \
+    DISABLE_PLANE_LOGGING="true" \
+    ENABLE_BASESTATION_FORMAT="false" \
+    BASESTATION_ADDRESS="0.0.0.0:30003" \
+    BEHAVE_AS_BASESTATION_CLIENT="false" \
+    SDRX_ADDRESS="sdrx.ip.address:6003" \
+    SDRX_TOPIC_NAME="VFO" \
+    NUMBER_OF_SDRX_TOPICS="3" \
+    ENABLE_FEEDING="true" \
+    FEEDERS="1\format=4 1\host=feed.airframes.io 1\port=5571"
+
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 # hadolint ignore=DL3008

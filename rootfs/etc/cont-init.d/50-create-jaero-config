@@ -3,17 +3,20 @@
 set -e
 set -u
 
-# Create Jaero Config directory
-if ! [[ -d /config/xdg/config/Jontisoft ]]; then
-    mkdir -p /config/xdg/config/Jontisoft/
+JAERO_HOME="/config/xdg/config/Jontisoft"
+
+# Create Jaero home directory
+if ! [[ -d ${JAERO_HOME} ]]; then
+    mkdir -p ${JAERO_HOME}/
 fi
 
-if [ "${NUMBER_OF_SDRX_TOPICS}" -gt 20 ]; then
+if [[ "${NUMBER_OF_SDRX_TOPICS}" -gt 20 ]]; then
     echo "Please enter a SDRX topic number less than 21"
     exit 1
-else
-    for i in $(seq -f "%02g" 1 "${NUMBER_OF_SDRX_TOPICS}"); do
-cat << END > /config/xdg/config/Jontisoft/"JAERO [${SDRX_TOPIC_NAME}$i].conf"
+fi
+
+for i in $(seq -f "%02g" 1 "${NUMBER_OF_SDRX_TOPICS}"); do
+	cat << END > ${JAERO_HOME}/"JAERO [${SDRX_TOPIC_NAME}$i].conf"
 [General]
 MQTT_enable=false
 PLANE_LOG_DB_SCHEMA_VERSION=2
@@ -25,14 +28,14 @@ checkBoxlogenable=false
 checkBoxlogwidebandwidthenable=false
 checkBoxonlyuselibacars=false
 checkOutputADSMessageToTCP=${ENABLE_BASESTATION_FORMAT}
-checkOutputDecodedMessageToUDPPort=${FEED_AIRFRAMES}
+checkOutputDecodedMessageToUDPPort=${ENABLE_FEEDING}
 checkSetStationId=true
 checkTCPAsClient=${BEHAVE_AS_BASESTATION_CLIENT}
 comboBoxDisplayformat=2
 comboBoxdisplay=2
 comboBoxsoundcard=AudioConnector.monitor
 lineEditdonotdisplaysus=26 0A C0 00 14 16
-lineEditlogdir=/dev/stdout
+lineEditlogdir=/dev/null
 lineEditplanelookup=http://www.flightradar24.com/data/airplanes/{REG}
 lineEditplanesfolder=/config/xdg/data/JAERO/planes
 lineEditstationid=${SET_STATION_ID}
@@ -47,11 +50,20 @@ zmqAudioInputReceiveAddress=tcp://${SDRX_ADDRESS}
 zmqAudioInputReceiveTopic=${SDRX_TOPIC_NAME}$i
 
 [feeders]
-1\format=4
-1\host=feed.airframes.io
-1\port=5571
-size=1
 END
 
 done
-fi
+
+IFS=" " read -r -a extra_feeders <<< "${FEEDERS}"
+NUMBER_OF_FEEDERS=$(printf -- '%s\n' "${extra_feeders[@]}" | grep format |wc -l)
+
+for i in $(seq -f "%02g" 1 "${NUMBER_OF_SDRX_TOPICS}"); do
+	for j in "${extra_feeders[@]}"; do
+		cat << END >> ${JAERO_HOME}/"JAERO [${SDRX_TOPIC_NAME}$i].conf"
+${j}
+END
+	done
+cat << EOF >> ${JAERO_HOME}/"JAERO [${SDRX_TOPIC_NAME}$i].conf"
+size=${NUMBER_OF_FEEDERS}
+EOF
+done
