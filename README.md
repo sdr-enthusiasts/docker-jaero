@@ -39,7 +39,7 @@ This container is based on the excellent [jlesage/docker-baseimage-gui](https://
 |`ENABLE_FEEDING`               | Enable feeding                                             | Enable output feeding using UDP          | `true`             |
 |`FEEDERS`                      | Add feeders to upload via UDP                              | Adds feeders under JAERO feeding window with format:host:port | `1\format=4 1\host=feed.airframes.io 1\port=5571` |
 
-`FEDDERS` format for jaero output is `3` for json and `4` for jsondump.
+`FEEDERS` format for jaero output is `3` for json and `4` for jsondump.
 Add more feeders by incrementing the first digit. See example entry in [`docker-compose.yml`](docker-compose.yml)
 
 ## Up-and-Running with `docker-compose` 
