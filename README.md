@@ -35,7 +35,7 @@ This container is based on the excellent [jlesage/docker-baseimage-gui](https://
 |`BEHAVE_AS_BASESTATION_CLIENT` | Set to true to enable client behaviour                     | Behave as client                         | `false`            |
 |`SDRX_ADDRESS`                 | SDRReceiver ip address and port to receive zmq data        | Address                                  | Unset              |
 |`SDRX_TOPIC_NAME`              | SDRReceiver topic name                                     | First half of topic setting              | `VFO`              |
-|`NUMBER_OF_SDRX_TOPICS`        | Total number of jaero configurations to create based on total number of SDRX vfo's, starting at `01` for a maximum of 20. Update SDRX.ini to match.| Second half of topic setting | `3` |
+|`NUMBER_OF_SDRX_TOPICS`        | Total number of jaero configurations to create based on total number of SDRX vfo's, starting at `01` for a maximum of 25. Update SDRX.ini to match.| Second half of topic setting | `3` |
 |`ENABLE_FEEDING`               | Enable feeding                                             | Enable output feeding using UDP          | `true`             |
 |`FEEDERS`                      | Add feeders to upload via UDP                              | Adds feeders under JAERO feeding window with format:host:port | `1\format=4 1\host=feed.airframes.io 1\port=5571` |
 
