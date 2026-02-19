@@ -10,8 +10,8 @@ if ! [[ -d ${JAERO_HOME} ]]; then
     mkdir -p ${JAERO_HOME}/
 fi
 
-if [[ "${NUMBER_OF_SDRX_TOPICS}" -gt 20 ]]; then
-    echo "Please enter a SDRX topic number less than 21"
+if [[ "${NUMBER_OF_SDRX_TOPICS}" -gt 25 ]]; then
+    echo "Please enter a SDRX topic number less than 26"
     exit 1
 fi
 
