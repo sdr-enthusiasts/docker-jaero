@@ -1,4 +1,4 @@
-FROM jlesage/baseimage-gui:debian-11-v4.6.7
+FROM jlesage/baseimage-gui:debian-11-v4.7.1
 
 ENV TZ="Australia/Melbourne" \
     SET_STATION_ID="FEEDER-ID" \
